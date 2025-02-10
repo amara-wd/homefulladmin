@@ -72,6 +72,8 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
               // { path: "/reservation", label: "Reservations", icon: faHome },
               // { path: "/user", label: "Users", icon: faUsers },
               // { path: "/notifications", label: "Notifications", icon: faBell },
+           
+
               { path: "/profile", label: "Profile", icon: faUser  },
               // { path: "/dashboard", label: "Settings", icon: faCog },
             ].map((item) => (
