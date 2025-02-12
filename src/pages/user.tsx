@@ -1,255 +1,192 @@
-import React, { useState } from "react";
-import { useUser } from "../context/GlobalContext";
+import React, { useState, useEffect } from "react";
+import { fetchUsers, updateUsers } from "../API/users";
+import { fetchShelters } from "../API/shelter";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+
+const roles = ["admin", "user", "manager"];
+
 const User: React.FC = () => {
-  const {users, addUser, updateUser, deleteUser } = useUser();
-  // State for all fields
-  const [useremail, setUseremail] = useState("");
-  const [username, setUsername] = useState("");
-  const [userpassword, setUserpassword] = useState("");
-  const [userDOB, setUserDOB] = useState("");
-  const [usergender, setUsergender] = useState("");
-  const [userimg, setUserimg] = useState<File | null>(null);
-  
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  // State for confirmation dialog
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
+  const [shelters, setShelters] = useState<any[]>([]);
   const [selectedUserIndex, setSelectedUserIndex] = useState<number | null>(null);
+  const [selectedShelters, setSelectedShelters] = useState<{ [key: number]: any[] }>({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
-  const handleSidebarToggle = (isOpen: boolean) => {
-    setIsSidebarOpen(isOpen);
-  };
   const [profileImage] = useState<string>(
-     localStorage.getItem("profileImage") || "/default-profile.png"
-   );
-  
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (useremail && userpassword && userDOB && usergender && username) {
-      let base64Image = null;
+    localStorage.getItem("profileImage") || "/default-profile.png"
+  );
+  const [adminName] = useState<string>(
+    localStorage.getItem("adminName") || "John Doe"
+  );
 
-      if (userimg) {
-        base64Image = await toBase64(userimg); // Convert image to base64
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const data = await fetchUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
       }
+    };
+    getUsers();
+  }, []);
 
-      const newEntry = {
-        useremail,
-        username,
-        userpassword,
-        userDOB,
-        usergender,
-        userimg: base64Image !== null ? base64Image : (editIndex !== null ? users[editIndex].userimg : null),
-     
-      };
-
-      if (editIndex !== null) {
-        updateUser(editIndex, newEntry); // Assuming this function exists in the context for managing users
-      } else {
-        addUser(newEntry); // Assuming this function exists in the context for managing users
+  useEffect(() => {
+    const getShelters = async () => {
+      try {
+        const data = await fetchShelters();
+        setShelters(data);
+      } catch (error) {
+        console.error("Error fetching shelters:", error);
       }
+    };
+    getShelters();
+  }, []);
 
-      // Reset form fields after submission
-      setUseremail("");
-      setUserpassword("");
-      setUsername("");
-      setUserDOB("");
-      setUsergender("");
-      setUserimg(null);
-      setEditIndex(null); // Reset edit mode
-    }
+  const handleRoleChange = (index: number, newRole: string) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user, i) => (i === index ? { ...user, role: newRole } : user))
+    );
   };
 
-  // Convert file to base64
-  const toBase64 = (file: File): Promise<string | null> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = () => reject(null);
-      reader.readAsDataURL(file);
-    });
-
-  // Handle editing of a user entry
-  const handleEdit = (index: number) => {
-    const entry = users[index];
-    setUseremail(entry.useremail);
-    setUsername(entry.username);
-    setUserpassword(entry.userpassword);
-    setUserDOB(entry.userDOB);
-    setUsergender(entry.usergender);
-    setUserimg(null);
-    setEditIndex(index);
-  };
-
-   // Show confirmation dialog for delete
-   const confirmDelete = (index: number) => {
+  const openShelterSelection = (index: number) => {
     setSelectedUserIndex(index);
-    setShowConfirmDialog(true);
-  };
-  // Handle delete action with confirmation
-  const handleDeleteConfirm = () => {
-    if (selectedUserIndex !== null) {
-      deleteUser(selectedUserIndex);
-    }
-    setShowConfirmDialog(false);
-    setSelectedUserIndex(null);
   };
 
-  // Handle cancel delete action
-  const handleDeleteCancel = () => {
-    setShowConfirmDialog(false);
-    setSelectedUserIndex(null);
+  const handleShelterSelect = (shelter: any) => {
+    if (selectedUserIndex === null) return;
+
+    setSelectedShelters((prev) => {
+      const userShelters = prev[selectedUserIndex] || [];
+      const alreadySelected = userShelters.some((s) => s.id === shelter.id);
+      if (alreadySelected) {
+        return {
+          ...prev,
+          [selectedUserIndex]: userShelters.filter((s) => s.id !== shelter.id),
+        };
+      } else {
+        return {
+          ...prev,
+          [selectedUserIndex]: [...userShelters, shelter],
+        };
+      }
+    });
   };
+
+  const updateUser = async (index: number) => {
+    const user = users[index];
+    const assignedShelters = selectedShelters[index] || [];
+    try {
+      await updateUsers(user.id, { ...user, shelters: assignedShelters });
+      alert("User updated successfully!");
+    } catch (error) {
+      console.error("Error updating user:", error);
+      alert("Failed to update user.");
+    }
+  };
+
   return (
-    <div className="flex h-screen bg-gray-100 ">
-    <Sidebar onSidebarToggle={handleSidebarToggle} />
-    <div
-        className={`flex-grow transition-all duration-300 ease-in-out bg-white shadow-inner overflow-y-auto ${
+    <div className="flex h-screen bg-gray-100">
+      <Sidebar onSidebarToggle={setIsSidebarOpen} />
+      <div className={`flex-grow transition-all duration-300 ease-in-out bg-white shadow-inner overflow-y-auto ${
           isSidebarOpen ? "ml-64" : "ml-0"
         }`}
       >
-      
-      <Header profileImage={profileImage} />
-        <div  className="p-4">
-      <div className="flex gap-6">
-        <h1 className="text-2xl font-bold mb-4">Users</h1>
-      </div>
-
-      {/* <form onSubmit={handleSubmit} className="mb-6">
-      <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Name</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter user name"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Email</label>
-          <input
-            type="email"
-            value={useremail}
-            onChange={(e) => setUseremail(e.target.value)}
-            placeholder="Enter user email"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Password</label>
-          <input
-            type="password"
-            value={userpassword}
-            onChange={(e) => setUserpassword(e.target.value)}
-            placeholder="Enter user password"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Date of Birth</label>
-          <input
-            type="date"
-            value={userDOB}
-            onChange={(e) => setUserDOB(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Gender</label>
-          <select
-            value={usergender}
-            onChange={(e) => setUsergender(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Profile Image</label>
-          <input
-            type="file"
-            onChange={(e) => setUserimg(e.target.files ? e.target.files[0] : null)}
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-          />
-        </div>
-
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-          {editIndex !== null ? "Update User" : "Add User"}
-        </button>
-      </form> */}
-
-      <div>
-        {users.length === 0 ? (
-          <p className="text-gray-500">No user entries yet.</p>
-        ) : (
-          <ul>
-            {users.map((entry, index) => (
-              <li key={index} className="mb-4 border-b pb-4 p-4 hover:bg-gray-200">
-                <div className="flex flex-col gap-2">
-                <h3 className="text-lg font-bold">{entry.username}</h3>
-                  <h3 className="text-lg font-bold">{entry.useremail}</h3>
-                  {entry.userimg && (
-                    <img
-                      src={entry.userimg}
-                      alt={entry.useremail}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                  )}
-                  <p><strong>Date of Birth:</strong> {entry.userDOB}</p>
-                  <p><strong>Gender:</strong> {entry.usergender}</p>
-                </div>
-                <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={() => handleEdit(index)}
-                    className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => confirmDelete(index)}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      {showConfirmDialog && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg">
-            <p>Are you sure you want to delete this user?</p>
-            <div className="mt-4 flex gap-4">
-              <button
-                onClick={handleDeleteConfirm}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-              >
-                Yes
-              </button>
-              <button
-                onClick={handleDeleteCancel}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-              >
-                No
-              </button>
-            </div>
+        <Header profileImage={profileImage} userName={adminName} />
+        <div className="p-4">
+          <h1 className="text-2xl font-bold mb-4">Users</h1>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-300">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="py-2 px-4 border">Name</th>
+                  <th className="py-2 px-4 border">Email</th>
+                  <th className="py-2 px-4 border">Role</th>
+                  <th className="py-2 px-4 border">Permission</th>
+                  <th className="py-2 px-4 border">Assigned Shelter</th>
+                  <th className="py-2 px-4 border">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user, index) => (
+                  <tr key={index} className="border">
+                    <td className="py-2 px-4 border">{user.name}</td>
+                    <td className="py-2 px-4 border">{user.email}</td>
+                    <td className="py-2 px-4 border">
+                      <select
+                        value={user.role}
+                        onChange={(e) => handleRoleChange(index, e.target.value)}
+                        className="border p-1"
+                      >
+                        {roles.map((role) => (
+                          <option key={role} value={role}>
+                            {role}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="py-2 px-4 border">
+                      {user.role === "manager" ? (
+                        <button
+                          onClick={() => openShelterSelection(index)}
+                          className="bg-[#5F25EB] text-white px-2 py-2 rounded"
+                        >
+                          Assign Shelter
+                        </button>
+                      ) : (
+                        "N/A"
+                      )}
+                    </td>
+                    <td className="py-2 px-4 border">
+                      {selectedShelters[index] && selectedShelters[index].length > 0
+                        ? selectedShelters[index]
+                            .map((shelter) => `${shelter.id} - ${shelter.name}`)
+                            .join(", ")
+                        : "None"}
+                    </td>
+                    <td className="py-2 px-4 border">
+                      <button
+                        onClick={() => updateUser(index)}
+                        className="bg-green-500 text-white px-2 py-1 rounded"
+                      >
+                        Save
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
+           {/* Shelter Selection Modal */}
+           {selectedUserIndex !== null && (
+            <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-5 rounded-lg w-96">
+                <h2 className="text-xl font-bold mb-3">Select Shelters</h2>
+                <div className="max-h-60 overflow-y-auto">
+                  {shelters.map((shelter) => (
+                    <label key={shelter.id} className="flex items-center space-x-2 mb-2">
+                      <input
+                        type="checkbox"
+                        checked={selectedShelters[selectedUserIndex]?.some(
+                          (s) => s.id === shelter.id
+                        )}
+                        onChange={() => handleShelterSelect(shelter)}
+                      />
+                      <span>{shelter.id} - {shelter.name}</span>
+                    </label>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setSelectedUserIndex(null)}
+                  className="bg-green-500 text-white px-4 py-2 mt-3 rounded w-full"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      )}
       </div>
-    </div>
     </div>
   );
 };

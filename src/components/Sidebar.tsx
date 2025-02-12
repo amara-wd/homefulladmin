@@ -6,7 +6,7 @@ import {
   faChevronRight,
   faBed,
   // faHome,
-  // faUsers,
+  faUsers,
   // faBell,
   faNewspaper,
   // faCog,
@@ -70,7 +70,7 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
               { path: "/legalhelp", label: "Legal Help", icon: faBalanceScale   },
               { path: "/aboutus", label: "About Us", icon: faInfoCircle  },
               // { path: "/reservation", label: "Reservations", icon: faHome },
-              // { path: "/user", label: "Users", icon: faUsers },
+              { path: "/user", label: "Users", icon: faUsers },
               // { path: "/notifications", label: "Notifications", icon: faBell },
            
 

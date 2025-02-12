@@ -466,6 +466,7 @@ const handleDeleteShelter = async () => {
     <table className="min-w-full bg-white border border-gray-300 table-fixed">
       <thead>
         <tr className="bg-gray-200">
+        <th className="border p-3 text-left">ID</th>
           <th className="border p-3 text-left">Name</th>
           <th className="border p-3 text-left">Add.</th>
           <th className="border p-3 text-left">Desc.</th>
@@ -486,6 +487,7 @@ const handleDeleteShelter = async () => {
       <tbody>
         {filteredShelters.map((shelter, index) => (
           <tr key={shelter.id} className="hover:bg-gray-100">
+             <td className="border p-3">{shelter.id}</td>
             <td className="border p-3">{shelter.name}</td>
             {/* <td className="border p-3">{shelter.address}</td> */}
             <td
