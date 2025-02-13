@@ -1,6 +1,6 @@
 import axiosInstance from "../API/axiosInstance";
 
-// Fetch all Parking
+// Fetch all Users
 export const fetchUsers = async () => {
   try {
     const token = localStorage.getItem("token");
@@ -9,58 +9,54 @@ export const fetchUsers = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data;
+
+    // Ensure the response includes assigned shelter info
+    return response.data.map((user: any) => ({
+      ...user,
+      assigned_shelter: user.assigned_shelter || null, // Ensure the key exists
+    }));
   } catch (error) {
     console.error("Error fetching users:", error);
     throw error;
   }
 };
 
-// Add a new users entry
-// export const addParking = async (parkingsData: any) => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     const response = await axiosInstance.post("/parking-spots", parkingsData, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error adding Parking:", error);
-//     throw error;
-//   }
-// };
 
-// Update an existing users entry
-export const updateUsers = async (usersId: string, usersData: any) => {
+// Update user role
+export const updateUserRole = async (userId: string, role: string) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axiosInstance.put(`/users/make-user/${usersId}`, usersData, {
+    const endpoint = role === "manager" ? "/users/make-manager" : "/users/make-user";
+    await axiosInstance.post(endpoint, { user_id: userId }, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data;
   } catch (error) {
-    console.error("Error updating users:", error);
-    throw error;
+    console.error("Error updating user role:", error);
   }
 };
 
+// Assign or unassign shelter
+export const assignShelter = async (userId: string, shelterId: string, assign = true) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
 
-// Delete a users entry
-// export const deleteParking = async (parkingsId: string) => {
-//   try {
-//     const token = localStorage.getItem("token");
-//     const response = await axiosInstance.delete(`/parking-spots/${parkingsId}`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error deleting Parking:", error);
-//     throw error;
-//   }
-// };
+    const endpoint = assign ? "/users/assign" : "/users/unassign";
+    await axiosInstance.post(
+      endpoint,
+      { user_id: userId, shelter_id: shelterId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.error(`Error ${assign ? "assigning" : "unassigning"} shelter:`, error);
+  }
+};
+
