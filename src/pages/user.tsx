@@ -9,8 +9,7 @@ const roles = ["user", "manager"];
 const User: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [shelters, setShelters] = useState<any[]>([]);
-  const [selectedUserIndex, setSelectedUserIndex] = useState<number | null>(null);
-  const [selectedShelters, setSelectedShelters] = useState<{ [key: number]: any }>({});
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [profileImage] = useState<string>(localStorage.getItem("profileImage") || "/default-profile.png");
   const [adminName] = useState<string>(localStorage.getItem("adminName") || "John Doe");
@@ -39,12 +38,11 @@ const User: React.FC = () => {
     getShelters();
   }, []);
 
-  const handleRoleChange = async (index: number, newRole: string) => {
-    const user = users[index];
+  const handleRoleChange = async (userId: string, newRole: string) => {
     try {
-      await updateUserRole(user.id, newRole);
+      await updateUserRole(userId, newRole);
       setUsers((prevUsers) =>
-        prevUsers.map((u, i) => (i === index ? { ...u, role: newRole } : u))
+        prevUsers.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
       );
     } catch (error) {
       console.error("Error updating role:", error);
@@ -52,26 +50,20 @@ const User: React.FC = () => {
   };
 
   const handleShelterSelect = async (shelter: any) => {
-    if (selectedUserIndex === null) return;
-    const user = users[selectedUserIndex];
-  
+    if (!selectedUser) return;
+    
     try {
-      await assignShelter(user.id, shelter.id, true);
-  
-      // Fetch users again to get the latest assignment state
-      const updatedUsers = await fetchUsers();
-      setUsers(updatedUsers);
-  
-      // Update assigned shelter map (for immediate UI response)
-      setSelectedShelters((prev) => ({
-        ...prev,
-        [user.id]: shelter,
-      }));
+      await assignShelter(selectedUser.id, shelter.id, true);
+      setUsers((prevUsers) =>
+        prevUsers.map((u) =>
+          u.id === selectedUser.id ? { ...u, assigned_shelter: shelter } : u
+        )
+      );
+      setSelectedUser(null); // Close modal after assignment
     } catch (error) {
       console.error("Error updating shelter assignment:", error);
     }
   };
-  
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -93,7 +85,7 @@ const User: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user, index) => (
+                {users.map((user) => (
                   <tr key={user.id} className="border">
                     <td className="py-2 px-4 border">{user.id}</td>
                     <td className="py-2 px-4 border">{user.name}</td>
@@ -101,7 +93,7 @@ const User: React.FC = () => {
                     <td className="py-2 px-4 border">
                       <select
                         value={user.role}
-                        onChange={(e) => handleRoleChange(index, e.target.value)}
+                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
                         className="border p-1"
                       >
                         {roles.map((role) => (
@@ -110,17 +102,12 @@ const User: React.FC = () => {
                       </select>
                     </td>
                     <td className="py-2 px-4 border">
-  {user.assigned_shelter 
-    ? `${user.assigned_shelter.id} - ${user.assigned_shelter.name}` 
-    : "None"}
-</td>
-
-
-
+                      {user.assigned_shelter ? `${user.assigned_shelter.id} - ${user.assigned_shelter.name}` : "None"}
+                    </td>
                     <td className="py-2 px-4 border">
                       {user.role === "manager" && (
                         <button
-                          onClick={() => setSelectedUserIndex(index)}
+                          onClick={() => setSelectedUser(user)}
                           className="bg-[#5F25EB] text-white px-2 py-2 rounded"
                         >
                           Assign Shelter
@@ -133,7 +120,7 @@ const User: React.FC = () => {
             </table>
           </div>
 
-          {selectedUserIndex !== null && (
+          {selectedUser && (
             <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
               <div className="bg-white p-5 rounded-lg w-96">
                 <h2 className="text-xl font-bold mb-3">Select Shelter</h2>
@@ -143,7 +130,7 @@ const User: React.FC = () => {
                       <input
                         type="radio"
                         name="shelter"
-                        checked={selectedShelters[users[selectedUserIndex].id]?.id === shelter.id}
+                        checked={selectedUser.assigned_shelter?.id === shelter.id}
                         onChange={() => handleShelterSelect(shelter)}
                       />
                       <span>{shelter.id} - {shelter.name}</span>
@@ -151,7 +138,7 @@ const User: React.FC = () => {
                   ))}
                 </div>
                 <button
-                  onClick={() => setSelectedUserIndex(null)}
+                  onClick={() => setSelectedUser(null)}
                   className="bg-green-500 text-white px-4 py-2 mt-3 rounded w-full"
                 >
                   Done

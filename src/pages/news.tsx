@@ -366,13 +366,13 @@ useEffect(() => {
       
           <button
             onClick={() => handleEdit(index)}
-            className="px-4 py-2 bg-yellow-500 text-white  hover:bg-yellow-600"
+            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
           >
             <FaEdit />
           </button>
           <button
             onClick={() => openDeleteModal(index)}
-            className="px-4 py-3 bg-red-500 text-white  hover:bg-red-600"
+            className="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600"
           >
             <FaTrash />
           </button>
