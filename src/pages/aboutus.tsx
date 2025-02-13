@@ -19,7 +19,8 @@ const AboutUs: React.FC = () => {
   const [profileImage] = useState<string>(
     localStorage.getItem("profileImage") || "/default-profile.png"
   );
-  const [ setPage] = useState<any | null>(null);
+  const [_, setPage] = useState<any | null>(null);
+
 
   useEffect(() => {
     const getPage = async () => {
