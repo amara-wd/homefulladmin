@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
+import React from "react";
+// import Sidebar from "../components/Sidebar";
+// import Header from "../components/Header";
 
 const Reservations: React.FC = () => {
   
-const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+// const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-const handleSidebarToggle = (isOpen: boolean) => {
-  setIsSidebarOpen(isOpen);
-};
-const [profileImage] = useState<string>(
-  localStorage.getItem("profileImage") || "/default-profile.png"
-);
+// const handleSidebarToggle = (isOpen: boolean) => {
+//   setIsSidebarOpen(isOpen);
+// };
+// const [profileImage] = useState<string>(
+//   localStorage.getItem("profileImage") || "/default-profile.png"
+// );
   return (
     <div className="flex h-screen bg-gray-100 ">
-    <Sidebar onSidebarToggle={handleSidebarToggle} />
+    {/* <Sidebar onSidebarToggle={handleSidebarToggle} />
     <div
         className={`flex-grow transition-all duration-300 ease-in-out bg-white shadow-inner overflow-y-auto ${
           isSidebarOpen ? "ml-64" : "ml-0"
@@ -32,7 +32,7 @@ const [profileImage] = useState<string>(
 
     
       </div>
-    </div>
+    </div> */}
     </div>
   );
 };

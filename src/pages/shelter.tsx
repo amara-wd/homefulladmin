@@ -6,7 +6,7 @@ import { FaEye ,FaEdit, FaTrash,FaSearch,FaBed } from "react-icons/fa";
 import { fetchShelters, addShelter, updateShelter, deleteShelter  } from "../API/shelter";
 const Shelter: React.FC = () => {
  const [profileImage] = useState<string>( localStorage.getItem("profileImage") || "/default-profile.png"); 
-  const [adminName, setAdminName] = useState<string>(
+  const [adminName] = useState<string>(
         localStorage.getItem("adminName") || "John Doe"
       );
   const [orgnname, setOrgnname] = useState("");

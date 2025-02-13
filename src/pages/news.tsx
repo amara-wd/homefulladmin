@@ -4,7 +4,7 @@ import Header from "../components/Header";
 import { FaEdit, FaTrash,FaEye,FaUser ,FaClock} from "react-icons/fa";
 import { fetchNews, addNews, updateNews, deleteNews } from "../API/news";
 const News: React.FC = () => {
-   const [adminName, setAdminName] = useState<string>(
+   const [adminName] = useState<string>(
          localStorage.getItem("adminName") || "John Doe"
        );
   const [title, setTitle] = useState("");

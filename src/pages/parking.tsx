@@ -8,7 +8,7 @@ const Parking: React.FC = () => {
  
  const [editIndex, setEditIndex] = useState<number | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-   const [adminName, setAdminName] = useState<string>(
+   const [adminName] = useState<string>(
          localStorage.getItem("adminName") || "John Doe"
        );
 const [entryToDelete, setEntryToDelete] = useState<number | null>(null);

@@ -6,7 +6,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const Resource: React.FC = () => {
-    const [adminName, setAdminName] = useState<string>(
+    const [adminName] = useState<string>(
            localStorage.getItem("adminName") || "John Doe"
          );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -19,7 +19,7 @@ const Resource: React.FC = () => {
   const [profileImage] = useState<string>(
     localStorage.getItem("profileImage") || "/default-profile.png"
   );
-  const [page, setPage] = useState<any | null>(null);
+  const [ setPage] = useState<any | null>(null);
 
   useEffect(() => {
     const getPage = async () => {
