@@ -16,6 +16,9 @@ import Dashboard from "./pages/dashboard";
 import Resource from "./pages/resource"; 
 import AboutUs from "./pages/aboutus"; 
 import LegalHelp from "./pages/legalhelp";
+import Privacy from "./pages/privacy";
+import Terms from "./pages/terms";
+import EvictionHelp from "./pages/evictionHelp";
 // Utility function to handle private routes
 const PrivateRoute = ({ element: Component, ...rest }: any) => {
   const isAuthenticated = localStorage.getItem("token"); // Check if the user is authenticated
@@ -43,6 +46,9 @@ const App: React.FC = () => {
           <Route path="/profile" element={<PrivateRoute element={Profile} />} />
           <Route path="/aboutus" element={<PrivateRoute element={AboutUs} />} />
           <Route path="/legalhelp" element={<PrivateRoute element={LegalHelp} />} />
+          <Route path="/privacy" element={<PrivateRoute element={Privacy} />} />
+          <Route path="/terms" element={<PrivateRoute element={Terms} />} />
+          <Route path="/evictionhelp" element={<PrivateRoute element={EvictionHelp} />} />
           
           {/* Other routes */}
           <Route path="/showNews" element={<Shownews />} />

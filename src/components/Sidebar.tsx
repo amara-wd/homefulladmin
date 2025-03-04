@@ -16,6 +16,8 @@ import {
   faParking,
   faInfoCircle,
   faSignOutAlt,
+ faFileContract, 
+ faGavel,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Sidebar {
@@ -69,6 +71,9 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
               { path: "/resources", label: "Resources", icon: faBoxOpen  },
               { path: "/legalhelp", label: "Legal Help", icon: faBalanceScale   },
               { path: "/aboutus", label: "About Us", icon: faInfoCircle  },
+              { path: "/terms", label: "Terms", icon: faFileContract   },
+              { path: "/evictionhelp", label: "Evictionhelp", icon: faGavel   },
+              { path: "/privacy", label: "Privacy", icon: faInfoCircle   },
               // { path: "/reservation", label: "Reservations", icon: faHome },
               { path: "/user", label: "Users", icon: faUsers },
               // { path: "/notifications", label: "Notifications", icon: faBell },

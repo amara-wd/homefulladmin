@@ -5,15 +5,12 @@ export const fetchUsers = async () => {
   try {
     const token = localStorage.getItem("token");
     const response = await axiosInstance.get("/users", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
 
-    // Ensure the response includes assigned shelter info
-    return response.data.map((user: any) => ({
+    return response.data.map((user:any) => ({
       ...user,
-      assigned_shelter: user.assigned_shelter || null, // Ensure the key exists
+      assigned_shelter: user.assigned_shelter || null, // Ensure assigned shelter is present
     }));
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -37,26 +34,31 @@ export const updateUserRole = async (userId: string, role: string) => {
   }
 };
 
-// Assign or unassign shelter
-export const assignShelter = async (userId: string, shelterId: string, assign = true) => {
+// Assign or unassign shelter and parking
+export const assignShelter = async (
+  userId: string,
+  shelterIds: string[] = [], // Ensure it always expects an array
+  parkingSpotIds: string[] = []
+) => {
   try {
     const token = localStorage.getItem("token");
-    if (!token) {
-      throw new Error("No authentication token found");
-    }
+    if (!token) throw new Error("No authentication token found");
 
-    const endpoint = assign ? "/users/assign" : "/users/unassign";
+    const endpoint = "/users/assign"; // Keeping the assignment logic
+
     await axiosInstance.post(
       endpoint,
-      { user_id: userId, shelter_id: shelterId },
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        user_id: userId,
+        shelter_ids: shelterIds, // Pass arrays
+        parking_spot_ids: parkingSpotIds, // Pass arrays
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
       }
     );
   } catch (error) {
-    console.error(`Error ${assign ? "assigning" : "unassigning"} shelter:`, error);
+    console.error("Error assigning shelter and parking:", error);
   }
 };
 
