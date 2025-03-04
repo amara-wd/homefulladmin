@@ -85,7 +85,7 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className="flex items-center p-2  rounded-lg hover:bg-[#5F25EB] focus:bg-[#3A1A82]"
+                  className="flex items-center p-2  text-sm  rounded-lg hover:bg-[#5F25EB] focus:bg-[#3A1A82]"
                 >
                   <FontAwesomeIcon icon={item.icon} className="mr-3" />
                   {item.label}
@@ -100,7 +100,7 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
         <div className="absolute bottom-4 left-4 right-4">
           <button
             onClick={handleLogout}
-            className="flex items-center p-2 rounded-lg hover:bg-[#5F25EB] focus:bg-[#3A1A82]"
+            className="flex items-center p-2  text-sm  rounded-lg hover:bg-[#5F25EB] focus:bg-[#3A1A82]"
           >
             <FontAwesomeIcon icon={faSignOutAlt} className="mr-3" />
             Logout
