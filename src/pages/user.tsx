@@ -159,7 +159,10 @@ const User: React.FC = () => {
   className="bg-[#5F25EB] text-white px-2 py-2 rounded"
 >
   Assign Parking Spot
+  
 </button> */}
+
+
 
                       </div>
                       )}
@@ -170,7 +173,7 @@ const User: React.FC = () => {
             </table>
           </div>
 
-          {selectedUser && (
+          {/* {selectedUser && (
   <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
     <div className="bg-white p-5 rounded-lg w-96">
       <h2 className="text-xl font-bold mb-3">Select Assignment</h2>
@@ -229,7 +232,7 @@ const User: React.FC = () => {
       </button>
     </div>
   </div>
-)}
+)} */}
 {selectedUser && (
   <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
     <div className="bg-white p-5 rounded-lg w-96">

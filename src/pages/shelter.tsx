@@ -530,11 +530,11 @@ const handleDeleteShelter = async () => {
             <td className="border p-3 flex gap-2 justify-center">
               <button
                 onClick={() => handleEdit(index)}
-                className="px-4 py-2 bg-yellow-500 text-white rounded-lg  hover:bg-yellow-600"
+                className="px-3.5 py-2 bg-yellow-500 text-white rounded-lg  hover:bg-yellow-600"
               ><FaEdit /> </button>
               <button
                 onClick={() => handleDeleteClick(shelter.id)}
-                className="px-4 py-3 bg-red-500 text-white rounded-lg  hover:bg-red-600"
+                className="px-3.5 py-3 bg-red-500 text-white rounded-lg  hover:bg-red-600"
               ><FaTrash /></button>
             </td>
           </tr>

@@ -350,9 +350,11 @@ useEffect(() => {
                     className="border p-3 cursor-pointer hover:bg-gray-200"
                     onClick={() => handleTdClick("Excerpt", news.excerpt)}
                   ><FaEye /> </td>
-      <td className="px-4 py-2 border border-gray-200 ">
-        {news.content}
-      </td>
+     
+      <td
+                    className="border p-3 cursor-pointer hover:bg-gray-200"
+                    onClick={() => handleTdClick("Content", news.content)}
+                  ><FaEye /> </td>
       <td className="px-4 py-2 border border-gray-200 ">
         {news.source}
       </td>
@@ -366,7 +368,7 @@ useEffect(() => {
       
           <button
             onClick={() => handleEdit(index)}
-            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+            className="px-3.5 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
           >
             <FaEdit />
           </button>
