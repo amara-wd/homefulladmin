@@ -113,6 +113,7 @@ const User: React.FC = () => {
                   <th className="py-2 px-4 border">Email</th>
                   <th className="py-2 px-4 border">Role</th>
                   <th className="py-2 px-4 border">Assigned Shelter</th>
+                  <th className="py-2 px-4 border">Assigned Parking-spots</th>
                   <th className="py-2 px-4 border">Permission</th>
                 </tr>
               </thead>
@@ -138,13 +139,17 @@ const User: React.FC = () => {
     ? user.assigned_shelter.map((shelter: any) => `${shelter.id} - ${shelter.name}`).join(", ")
     : "None"}
 </td>
-
+             <td className="py-2 px-4 border">
+  {user.assigned_parking_spot && user.assigned_parking_spot.length > 0
+    ? user.assigned_parking_spot.map((parking: any) => `${parking.id} - ${parking.name}`).join(", ")
+    : "None"}
+</td>
                     <td className="py-2 px-4 border">
                       {user.role === "manager" && (
                         <div>
                        <button
   onClick={() => setSelectedUser(user)}
-  className="bg-[#5F25EB] text-white px-2 py-2 rounded"
+  className="bg-[#5F25EB] text-white px-2 py-2 text-xs rounded"
 >
   Assign Shelters and Parkingspots
 </button>
@@ -225,6 +230,81 @@ const User: React.FC = () => {
     </div>
   </div>
 )}
+{selectedUser && (
+  <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="bg-white p-5 rounded-lg w-96">
+      <h2 className="text-xl font-bold mb-3">Select Assignment</h2>
+
+      {/* Shelter Selection */}
+      <h3 className="font-semibold">Shelter</h3>
+      <div className="max-h-60 overflow-y-auto">
+        {shelters.map((shelter) => {
+          const isChecked = selectedUser.assigned_shelter?.some((s: any) => s.id === shelter.id);
+
+          return (
+            <label key={shelter.id} className="flex items-center space-x-2 mb-2">
+              <input
+                type="checkbox"
+                name="shelter"
+                checked={isChecked}
+                onChange={() => {
+                  let updatedShelters = selectedUser.assigned_shelter || [];
+
+                  if (isChecked) {
+                    updatedShelters = updatedShelters.filter((s: any) => s.id !== shelter.id);
+                  } else {
+                    updatedShelters = [...updatedShelters, shelter];
+                  }
+
+                  handleAssignmentSelect(updatedShelters, selectedUser.assigned_parking_spot || []);
+                }}
+              />
+              <span>{shelter.id} - {shelter.name}</span>
+            </label>
+          );
+        })}
+      </div>
+
+      {/* Parking Spot Selection */}
+      <h3 className="font-semibold mt-4">Parking Spot</h3>
+      <div className="max-h-60 overflow-y-auto">
+        {parkings.map((parking) => {
+          const isChecked = selectedUser.assigned_parking_spot?.some((p: any) => p.id === parking.id);
+
+          return (
+            <label key={parking.id} className="flex items-center space-x-2 mb-2">
+              <input
+                type="checkbox"
+                name="parking"
+                checked={isChecked}
+                onChange={() => {
+                  let updatedParkings = selectedUser.assigned_parking_spot || [];
+
+                  if (isChecked) {
+                    updatedParkings = updatedParkings.filter((p: any) => p.id !== parking.id);
+                  } else {
+                    updatedParkings = [...updatedParkings, parking];
+                  }
+
+                  handleAssignmentSelect(selectedUser.assigned_shelter || [], updatedParkings);
+                }}
+              />
+              <span>{parking.id} - {parking.name}</span>
+            </label>
+          );
+        })}
+      </div>
+
+      <button
+        onClick={() => setSelectedUser(null)}
+        className="bg-[#5F25EB] text-white px-4 py-2 mt-3 rounded w-full"
+      >
+        Done
+      </button>
+    </div>
+  </div>
+)}
+
 
         </div>
       </div>

@@ -4,7 +4,7 @@ import axiosInstance from "../API/axiosInstance";
 export const fetchParking = async () => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axiosInstance.get("/parking-spots/nearest", {
+    const response = await axiosInstance.get("/parking-spots", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
