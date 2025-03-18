@@ -26,6 +26,7 @@ const PrivateRoute = ({ element: Component, ...rest }: any) => {
   return isAuthenticated ? <Component {...rest} /> : <Navigate to="/login" replace />;
 };
 
+
 const App: React.FC = () => {
   return (
     <Router>

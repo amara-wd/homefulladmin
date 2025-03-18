@@ -3,7 +3,7 @@ import axiosInstance from '../API/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('amara@foodsters.org');
+  const [email, setEmail] = useState('alex@foodsters.org');
   const [password, setPassword] = useState('Password123*');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false); // Add loading state
