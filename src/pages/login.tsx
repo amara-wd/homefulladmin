@@ -24,7 +24,14 @@ const Login: React.FC = () => {
       const response = await axiosInstance.post('/users/login', { email, password }); // Use relative URL
       const token = response.data.data.token;  // Access token correctly
       localStorage.setItem('token', token);    // Store the token in localStorage
-    
+      // const token = response.data.data.token;
+      const userRole = response.data.data.user.role;
+      localStorage.setItem("userRole", userRole);
+      console.log('userRole:', userRole);
+      console.log('Full Response:', response);
+
+      navigate('/dashboard');
+      
       // console.log('Token from API:', token); 
       // console.log('Full Response:', response); 
       // console.log('Token from Response:', response?.data?.data?.token); 

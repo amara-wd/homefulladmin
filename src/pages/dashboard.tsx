@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { fetchReservations } from "../API/reservations";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const Dashboard: React.FC = () => {
+ 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+  const [shelterReservations, setShelterReservations] = useState([]);
+  const [parkingReservations, setParkingReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
   const handleSidebarToggle = (isOpen: boolean) => {
     setIsSidebarOpen(isOpen);
   };
@@ -41,6 +45,24 @@ const Dashboard: React.FC = () => {
     ];
   
     const COLORS = ["#5F25EB", "#23A055"];
+    useEffect(() => {
+      const getReservations = async () => {
+        try {
+          const data = await fetchReservations();
+          setShelterReservations(data.shelter_reservations);
+          setParkingReservations(data.parking_reservations);
+          console.log("Shelter Reservations after setting state:", shelterReservations);
+
+        } catch (error) {
+          console.error("Failed to load reservations");
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      getReservations();
+    }, []);
+    if (loading) return <div>Loading...</div>;
   return (
     <div className="flex h-screen bg-gray-100">
     {/* Sidebar */}
@@ -124,7 +146,31 @@ const Dashboard: React.FC = () => {
       </div>
       </Link>
     </main>
+   <div>
+      <h2>Shelter Reservations</h2>
+      {shelterReservations.length > 0 ? (
+        <ul>
+          {shelterReservations.map((reservation, index) => (
+            <li key={index}>{JSON.stringify(reservation)}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No shelter reservations available.</p>
+      )}
+
+      <h2>Parking Reservations</h2>
+      {parkingReservations.length > 0 ? (
+        <ul>
+          {parkingReservations.map((reservation, index) => (
+            <li key={index}>{JSON.stringify(reservation)}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No parking reservations available.</p>
+      )}
     </div>
+    </div>
+    
   </div>
   
   );

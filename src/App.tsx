@@ -49,7 +49,16 @@ const App: React.FC = () => {
           <Route path="/privacy" element={<PrivateRoute element={Privacy} />} />
           <Route path="/terms" element={<PrivateRoute element={Terms} />} />
           <Route path="/evictionhelp" element={<PrivateRoute element={EvictionHelp} />} />
-          
+          <Route path="/reservation" element={<PrivateRoute element={Reservations} />} />
+          {/* <Route
+  path="/reservation"
+  element={
+    <ProtectedRoute>
+      <Reservations />
+    </ProtectedRoute>
+  }
+/> */}
+
           {/* Other routes */}
           <Route path="/showNews" element={<Shownews />} />
           <Route path="/news/:index" element={<NewsDetail />} />

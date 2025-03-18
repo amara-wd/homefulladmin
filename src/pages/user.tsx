@@ -154,13 +154,7 @@ const User: React.FC = () => {
   Assign Shelters and Parkingspots
 </button>
 
-{/* <button
-  onClick={() => setSelectedUser(user)}
-  className="bg-[#5F25EB] text-white px-2 py-2 rounded"
->
-  Assign Parking Spot
-  
-</button> */}
+
 
 
 
@@ -173,66 +167,8 @@ const User: React.FC = () => {
             </table>
           </div>
 
-          {/* {selectedUser && (
-  <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-    <div className="bg-white p-5 rounded-lg w-96">
-      <h2 className="text-xl font-bold mb-3">Select Assignment</h2>
-      
-      <h3 className="font-semibold">Shelter</h3>
-      <div className="max-h-60 overflow-y-auto">
-  {shelters.map((shelter) => {
-    const isChecked = selectedUser.assigned_shelter?.some((s: any) => s.id === shelter.id);
-
-    return (
-      <label key={shelter.id} className="flex items-center space-x-2 mb-2">
-        <input
-          type="checkbox"
-          name="shelter"
-          checked={isChecked}
-          onChange={() => {
-            let updatedShelters = selectedUser.assigned_shelter || [];
-
-            if (isChecked) {
-              updatedShelters = updatedShelters.filter((s: any) => s.id !== shelter.id);
-            } else {
-              updatedShelters = [...updatedShelters, shelter];
-            }
-
-            handleAssignmentSelect(updatedShelters, selectedUser.assigned_parking_spot || []);
-          }}
-        />
-        <span>{shelter.id} - {shelter.name}</span>
-      </label>
-    );
-  })}
-</div>
 
 
-      <h3 className="font-semibold mt-4">Parking Spot</h3>
-      <div className="max-h-60 overflow-y-auto">
-  {parkings.map((parking) => (
-    <label key={parking.id} className="flex items-center space-x-2 mb-2">
-      <input
-        type="radio"
-        name="parking"
-        checked={selectedUser.assigned_parking_spot?.id === parking.id}
-        onChange={() => handleAssignmentSelect(selectedUser.assigned_shelter || [], [parking])}
-      />
-      <span>{parking.id} - {parking.name}</span>
-    </label>
-  ))}
-</div>
- 
-
-      <button
-        onClick={() => setSelectedUser(null)}
-        className="bg-green-500 text-white px-4 py-2 mt-3 rounded w-full"
-      >
-        Done
-      </button>
-    </div>
-  </div>
-)} */}
 {selectedUser && (
   <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
     <div className="bg-white p-5 rounded-lg w-96">
