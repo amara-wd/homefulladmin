@@ -169,7 +169,7 @@ const Reservation: React.FC = () => {
     const getReservations = async () => {
       try {
         const data = await fetchReservations();
-        if (userRole === "manager" && (assignedShelters.length > 0 || assignedParkingSpots.length > 0)) {
+        if (userRole === "manager" &&   (assignedShelters.length > 0 || assignedParkingSpots.length > 0)) {
           const filteredShelterReservations = data.shelter_reservations.filter((reservation: any) =>
             assignedShelters.includes(reservation.shelter_id)
           );

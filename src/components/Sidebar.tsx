@@ -17,6 +17,7 @@ import {
   faGavel,
   faCaretDown,
   faCaretRight,
+  faClipboardCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface Sidebar {
@@ -77,7 +78,7 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
             to="/reservation"
             className="flex items-center p-2 text-sm rounded-lg hover:bg-[#5F25EB] focus:bg-[#3A1A82]"
           >
-            <FontAwesomeIcon icon={faBed} className="mr-3" />
+            <FontAwesomeIcon icon={faClipboardCheck} className="mr-3" />
             Reservations
           </Link>
         </li>
@@ -97,7 +98,7 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
         {[
           { path: "/shelter", label: "Shelters", icon: faBed },
           { path: "/parking", label: "Parking", icon: faParking },
-          { path: "/reservation", label: "Reservations", icon: faBed },
+          { path: "/reservation", label: "Reservations", icon: faClipboardCheck },
           { path: "/news", label: "News", icon: faNewspaper },
           { path: "/user", label: "Users", icon: faUsers },
           { path: "/profile", label: "Profile", icon: faUser },
@@ -117,7 +118,7 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
         <li>
           <button
             onClick={toggleDropdown}
-            className="flex items-center p-2 w-full text-sm rounded-lg hover:bg-[#5F25EB] focus:bg-[#3A1A82] focus:outline-none"
+            className=" flex items-center p-2 w-full text-sm rounded-lg hover:bg-[#5F25EB] focus:bg-[#5F25EB] focus:outline-none"
           >
             <FontAwesomeIcon icon={faBoxOpen} className="mr-3" />
             Resources
@@ -127,7 +128,8 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
             />
           </button>
           {isDropdownOpen && (
-            <ul className="pl-6 mt-1 space-y-1">
+            <ul className="pl-6 mt-1 space-y-1 bg-gray-800 border border-gray-700  z-50 relative">
+
               {[
                 { path: "/resources", label: "Resources", icon: faBoxOpen },
                 { path: "/legalhelp", label: "Legal Help", icon: faBalanceScale },
@@ -139,7 +141,7 @@ const Sidebar: React.FC<Sidebar> = ({ onSidebarToggle }) => {
                 <li key={item.path}>
                   <Link
                     to={item.path}
-                    className="flex items-center p-2 text-sm rounded-lg hover:bg-gray-700"
+                    className="flex items-center p-2 text-sm rounded-lg hover:bg-[#5F25EB]"
                   >
                     <FontAwesomeIcon icon={item.icon} className="mr-3" />
                     {item.label}
