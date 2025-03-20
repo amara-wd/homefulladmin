@@ -44,7 +44,7 @@ const filteredNews = news.filter((news) => {
   return nameMatches && readTimeMatches;
 });
  const [profileImage] = useState<string>(
-    localStorage.getItem("profileImage") || "/default-profile.png"
+    localStorage.getItem("profileImage") || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC71DQ4-MmziD-OYefebcWaYZB78NLwclD8A&s"
   );
   const handleTdClick = (title: string, content: string) => {
     setPopupTitle(title);

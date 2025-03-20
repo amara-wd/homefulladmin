@@ -11,9 +11,12 @@ const User: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [shelters, setShelters] = useState<any[]>([]);
   const [parkings, setParkings] = useState<any[]>([]);
+  const [selectedShelters, setSelectedShelters] = useState<any[]>([]);
+const [selectedParkings, setSelectedParkings] = useState<any[]>([]);
+
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [profileImage] = useState<string>(localStorage.getItem("profileImage") || "/default-profile.png");
+  const [profileImage] = useState<string>(localStorage.getItem("profileImage") || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC71DQ4-MmziD-OYefebcWaYZB78NLwclD8A&s");
   const [adminName] = useState<string>(localStorage.getItem("adminName") || "John Doe");
 
   useEffect(() => {
@@ -51,6 +54,23 @@ const User: React.FC = () => {
     };
     getParkings();
   }, []);
+// Shelter checkbox change handler
+const handleShelterChange = (shelter: any) => {
+  setSelectedShelters((prev) =>
+    prev.some((s) => s.id === shelter.id)
+      ? prev.filter((s) => s.id !== shelter.id)
+      : [...prev, shelter]
+  );
+};
+
+// Parking checkbox change handler
+const handleParkingChange = (parking: any) => {
+  setSelectedParkings((prev) =>
+    prev.some((p) => p.id === parking.id)
+      ? prev.filter((p) => p.id !== parking.id)
+      : [...prev, parking]
+  );
+};
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     try {
@@ -62,38 +82,64 @@ const User: React.FC = () => {
       console.error("Error updating role:", error);
     }
   };
-
-  const handleAssignmentSelect = async (
-    selectedShelters: any[] = [],
-    selectedParkingSpots: any[] = []
-  ) => {
+  const handleAssignmentSelect = async () => {
     if (!selectedUser) return;
   
     try {
-      // Extract IDs from selected shelters and parking spots
-      const shelterIds = selectedShelters.map(s => s.id);
-      const parkingSpotIds = selectedParkingSpots.map(p => p.id);
+      const shelterIds = selectedShelters.map((s) => s.id);
+      const parkingSpotIds = selectedParkings.map((p) => p.id);
   
       await assignShelter(selectedUser.id, shelterIds, parkingSpotIds);
   
-      // Update local state
-      setUsers(prevUsers =>
-        prevUsers.map(u =>
+      setUsers((prevUsers) =>
+        prevUsers.map((u) =>
           u.id === selectedUser.id
             ? {
                 ...u,
                 assigned_shelter: selectedShelters,
-                assigned_parking_spot: selectedParkingSpots,
+                assigned_parking_spot: selectedParkings,
               }
             : u
         )
       );
   
-      
+      setSelectedUser(null);
     } catch (error) {
       console.error("Error updating assignment:", error);
     }
   };
+  
+  // const handleAssignmentSelect = async (
+  //   selectedShelters: any[] = [],
+  //   selectedParkingSpots: any[] = []
+  // ) => {
+  //   if (!selectedUser) return;
+  
+  //   try {
+  //     // Extract IDs from selected shelters and parking spots
+  //     const shelterIds = selectedShelters.map(s => s.id);
+  //     const parkingSpotIds = selectedParkingSpots.map(p => p.id);
+  
+  //     await assignShelter(selectedUser.id, shelterIds, parkingSpotIds);
+  
+  //     // Update local state
+  //     setUsers(prevUsers =>
+  //       prevUsers.map(u =>
+  //         u.id === selectedUser.id
+  //           ? {
+  //               ...u,
+  //               assigned_shelter: selectedShelters,
+  //               assigned_parking_spot: selectedParkingSpots,
+  //             }
+  //           : u
+  //       )
+  //     );
+  
+      
+  //   } catch (error) {
+  //     console.error("Error updating assignment:", error);
+  //   }
+  // };
   
   
 
@@ -174,72 +220,53 @@ const User: React.FC = () => {
     <div className="bg-white p-5 rounded-lg w-96">
       <h2 className="text-xl font-bold mb-3">Select Assignment</h2>
 
-      {/* Shelter Selection */}
-      <h3 className="font-semibold">Shelter</h3>
-      <div className="max-h-60 overflow-y-auto">
-        {shelters.map((shelter) => {
-          const isChecked = selectedUser.assigned_shelter?.some((s: any) => s.id === shelter.id);
+     {/* Shelter Selection */}
+<h3 className="font-semibold">Shelter</h3>
+<div className="max-h-60 overflow-y-auto">
+  {shelters.map((shelter) => {
+    const isChecked = selectedShelters.some((s) => s.id === shelter.id);
 
-          return (
-            <label key={shelter.id} className="flex items-center space-x-2 mb-2">
-              <input
-                type="checkbox"
-                name="shelter"
-                checked={isChecked}
-                onChange={() => {
-                  let updatedShelters = selectedUser.assigned_shelter || [];
+    return (
+      <label key={shelter.id} className="flex items-center space-x-2 mb-2">
+        <input
+          type="checkbox"
+          name="shelter"
+          checked={isChecked}
+          onChange={() => handleShelterChange(shelter)}
+        />
+        <span>{shelter.id} - {shelter.name}</span>
+      </label>
+    );
+  })}
+</div>
 
-                  if (isChecked) {
-                    updatedShelters = updatedShelters.filter((s: any) => s.id !== shelter.id);
-                  } else {
-                    updatedShelters = [...updatedShelters, shelter];
-                  }
+{/* Parking Spot Selection */}
+<h3 className="font-semibold mt-4">Parking Spot</h3>
+<div className="max-h-60 overflow-y-auto">
+  {parkings.map((parking) => {
+    const isChecked = selectedParkings.some((p) => p.id === parking.id);
 
-                  handleAssignmentSelect(updatedShelters, selectedUser.assigned_parking_spot || []);
-                }}
-              />
-              <span>{shelter.id} - {shelter.name}</span>
-            </label>
-          );
-        })}
-      </div>
+    return (
+      <label key={parking.id} className="flex items-center space-x-2 mb-2">
+        <input
+          type="checkbox"
+          name="parking"
+          checked={isChecked}
+          onChange={() => handleParkingChange(parking)}
+        />
+        <span>{parking.id} - {parking.name}</span>
+      </label>
+    );
+  })}
+</div>
 
-      {/* Parking Spot Selection */}
-      <h3 className="font-semibold mt-4">Parking Spot</h3>
-      <div className="max-h-60 overflow-y-auto">
-        {parkings.map((parking) => {
-          const isChecked = selectedUser.assigned_parking_spot?.some((p: any) => p.id === parking.id);
+<button
+  onClick={handleAssignmentSelect}
+  className="bg-[#5F25EB] text-white px-4 py-2 mt-3 rounded w-full"
+>
+  Done
+</button>
 
-          return (
-            <label key={parking.id} className="flex items-center space-x-2 mb-2">
-              <input
-                type="checkbox"
-                name="parking"
-                checked={isChecked}
-                onChange={() => {
-                  let updatedParkings = selectedUser.assigned_parking_spot || [];
-
-                  if (isChecked) {
-                    updatedParkings = updatedParkings.filter((p: any) => p.id !== parking.id);
-                  } else {
-                    updatedParkings = [...updatedParkings, parking];
-                  }
-
-                  handleAssignmentSelect(selectedUser.assigned_shelter || [], updatedParkings);
-                }}
-              />
-              <span>{parking.id} - {parking.name}</span>
-            </label>
-          );
-        })}
-      </div>
-
-      <button
-        onClick={() => setSelectedUser(null)}
-        className="bg-[#5F25EB] text-white px-4 py-2 mt-3 rounded w-full"
-      >
-        Done
-      </button>
     </div>
   </div>
 )}

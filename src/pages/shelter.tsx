@@ -5,7 +5,7 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import { FaEye ,FaEdit, FaTrash,FaSearch,FaBed } from "react-icons/fa"; 
 import { fetchShelters, addShelter, updateShelter, deleteShelter  } from "../API/shelter";
 const Shelter: React.FC = () => {
- const [profileImage] = useState<string>( localStorage.getItem("profileImage") || "/default-profile.png"); 
+ const [profileImage] = useState<string>( localStorage.getItem("profileImage") || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC71DQ4-MmziD-OYefebcWaYZB78NLwclD8A&s"); 
   const [adminName] = useState<string>(
         localStorage.getItem("adminName") || "John Doe"
       );

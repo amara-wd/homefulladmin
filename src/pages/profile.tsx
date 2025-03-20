@@ -11,7 +11,7 @@ const Profile: React.FC = () => {
     localStorage.getItem("adminName") || "John Doe"
   );
   const [profileImage, setProfileImage] = useState<string>(
-    localStorage.getItem("profileImage") || "/default-profile.png"
+    localStorage.getItem("profileImage") || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC71DQ4-MmziD-OYefebcWaYZB78NLwclD8A&s"
   );
 
   // Temporary states for unsaved changes

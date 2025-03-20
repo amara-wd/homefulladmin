@@ -16,7 +16,7 @@ const [isSidebarOpen, setIsSidebarOpen] = useState(false);
  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [profileImage] = useState<string>( localStorage.getItem("profileImage") || "/default-profile.png"); 
+  const [profileImage] = useState<string>( localStorage.getItem("profileImage") || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC71DQ4-MmziD-OYefebcWaYZB78NLwclD8A&s"); 
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
     const [image_url, setImageUrl] = useState<File | null>(null);

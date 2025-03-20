@@ -17,7 +17,7 @@ const LegalHelp: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [profileImage] = useState<string>(
-    localStorage.getItem("profileImage") || "/default-profile.png"
+    localStorage.getItem("profileImage") || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC71DQ4-MmziD-OYefebcWaYZB78NLwclD8A&s"
   );
   const [_, setPage] = useState<any | null>(null);
 

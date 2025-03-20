@@ -1,106 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import { fetchReservations } from "../API/reservations";
-// import Sidebar from "../components/Sidebar";
-// import Header from "../components/Header";
-
-// const Reservation: React.FC = () => {
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-//   const [shelterReservations, setShelterReservations] = useState<any[]>([]);
-//   const [parkingReservations, setParkingReservations] = useState<any[]>([]);
-//   const [loading, setLoading] = useState(true);
-
-//   const handleSidebarToggle = (isOpen: boolean) => {
-//     setIsSidebarOpen(isOpen);
-//   };
-
-//   const [profileImage] = useState<string>(
-//     localStorage.getItem("profileImage") || "/default-profile.png"
-//   );
-//   const [adminName] = useState<string>(
-//     localStorage.getItem("adminName") || "John Doe"
-//   );
-
-//   useEffect(() => {
-//     const getReservations = async () => {
-//       try {
-//         const data = await fetchReservations();
-//         setShelterReservations(data.shelter_reservations);
-//         setParkingReservations(data.parking_reservations);
-//         console.log("Shelter Reservations:", data.shelter_reservations);
-//         console.log("Parking Reservations:", data.parking_reservations);
-//       } catch (error) {
-//         console.error("Failed to load reservations", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     getReservations();
-//   }, []);
-
-//   if (loading) return <div>Loading...</div>;
-
-//   const renderTable = (reservations: any[]) => {
-//     if (reservations.length === 0) return <p>No reservations available.</p>;
-
-//     const columns = Object.keys(reservations[0]);
-
-//     return (
-//       <div className="overflow-x-auto">
-//         <table className="min-w-full border border-gray-200 bg-white rounded-lg">
-//           <thead>
-//             <tr className="bg-gray-200 text-black">
-//               {columns.map((col) => (
-//                 <th key={col} className="px-4 py-2">
-//                   {col.charAt(0).toUpperCase() + col.slice(1)}
-//                 </th>
-//               ))}
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {reservations.map((reservation, index) => (
-//               <tr key={index} className="text-gray-700 border-b hover:bg-gray-100">
-//                 {columns.map((col) => (
-//                   <td key={col} className="px-4 py-2 text-center">
-//                     {reservation[col] ? reservation[col].toString() : "N/A"}
-//                   </td>
-//                 ))}
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-//     );
-//   };
-
-//   return (
-//     <div className="flex h-screen bg-gray-100">
-//       {/* Sidebar */}
-//       <Sidebar onSidebarToggle={handleSidebarToggle} />
-
-//       {/* Main Content */}
-//       <div
-//         className={`flex-grow transition-all duration-300 ease-in-out bg-white shadow-inner overflow-y-auto ${
-//           isSidebarOpen ? "ml-64" : "ml-0"
-//         }`}
-//       >
-//         <Header profileImage={profileImage} userName={adminName} />
-
-//         <main className="p-6">
-//           <h1 className="text-3xl font-bold text-gray-800 mb-6">Reservations</h1>
-
-//           <h2 className="text-2xl font-semibold text-gray-700 mb-4">Shelter Reservations</h2>
-//           {renderTable(shelterReservations)}
-
-//           <h2 className="text-2xl font-semibold text-gray-700 mt-8 mb-4">Parking Reservations</h2>
-//           {renderTable(parkingReservations)}
-//         </main>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Reservation;
 
 import axiosInstance from "../API/axiosInstance";
 import React, { useState, useEffect } from "react";
@@ -156,7 +53,7 @@ const Reservation: React.FC = () => {
     setIsSidebarOpen(isOpen);
   };
   const [profileImage] = useState<string>(
-    localStorage.getItem("profileImage") || "/default-profile.png"
+    localStorage.getItem("profileImage") || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC71DQ4-MmziD-OYefebcWaYZB78NLwclD8A&s"
   );
   const [adminName] = useState<string>(
     localStorage.getItem("adminName") || "John Doe"
